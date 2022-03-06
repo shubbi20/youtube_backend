@@ -4,11 +4,11 @@ import express,{Request,Response} from 'express';
 import ytdl from 'ytdl-core';
 import cors from 'cors';
 
-const port = 7082;
+const port:string|number = process.env.PORT || 3008;
 const app = express();
 
 app.use(cors({
-  origin:'http://localhost:3000'  //this origin can access
+  origin:'*'  //this origin can access
 }));
 
 
