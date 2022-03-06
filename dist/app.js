@@ -1,13 +1,4 @@
 "use strict";
-// import express from 'express';
-// /**
-//  * https://www.npmjs.com/package/@types/express?source=post_page---------------------------
-//  * add typescript definition for express
-//  */
-// import {Request,Response,NextFunction} from 'express';
-// const app=express();
-// console.log('hello');
-// app.use('/',async (req:Request, res:Response , next:NextFunction)=>{
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -21,25 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// });
-// const express = require("express");
-// const fs = require('fs');
-// const ytdl = require('ytdl-core');
-// const app = express();
-// var cors =require('cors')
-//app.use(cors())
 const express_1 = __importDefault(require("express"));
 const ytdl_core_1 = __importDefault(require("ytdl-core"));
 const cors_1 = __importDefault(require("cors"));
-const port = 4000;
+const port = 7082;
 const app = (0, express_1.default)();
-app.use(cors_1.default);
-app.get('/', (req, res) => {
-    res.send('Hello World! shubbi ');
-});
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000' //this origin can access
+}));
 const convertUrl = (url) => {
     let newUrlArray;
-    if (url.includes("youtu.be")) {
+    if (url.includes("youtu.be")) { //url short can be: www.youtu.be/
         newUrlArray = url.split("https://youtu.be/");
         return `https://youtube.com/watch?v=${newUrlArray[1]}`;
     }
@@ -51,16 +34,18 @@ const convertUrl = (url) => {
         return url;
     }
     else {
-        return "https://youtube.com/watch?v=dQw4w9WgXcQ";
+        console.log("url:  " + url);
+        console.log('hello');
+        return "https://www.youtube.com/watch?v=_zSZXBdYOjc";
     }
 };
 //video
 app.get("/video", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('testing get video api' + req.query.videoId);
-    // const videoId = convertUrl(req.query.videoId);
-    //  let info = await ytdl.getInfo(videoId)
-    //  res.json(info);
-    res.send('hello');
+    console.log('testing get video api' + req.query.v);
+    const videoId = convertUrl(req.query.videoId);
+    let info = yield ytdl_core_1.default.getInfo(videoId);
+    res.json(info);
+    // res.send('hello');
 }));
 //audio
 app.get("/audio", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -84,6 +69,7 @@ app.get("/download", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     (0, ytdl_core_1.default)(videoId, { filter: format => format.itag === parseInt(itag) }).pipe(res);
 }));
-app.listen(port, () => {
-    console.log('server started');
+app.get('/', (req, res) => {
+    res.send('<h1>Hello World! shubbi </h1>');
 });
+app.listen(port);

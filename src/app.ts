@@ -1,40 +1,23 @@
-// import express from 'express';
-// /**
-//  * https://www.npmjs.com/package/@types/express?source=post_page---------------------------
-//  * add typescript definition for express
-//  */
-// import {Request,Response,NextFunction} from 'express';
-// const app=express();
-// console.log('hello');
-// app.use('/',async (req:Request, res:Response , next:NextFunction)=>{
 
-// });
-// const express = require("express");
-// const fs = require('fs');
-// const ytdl = require('ytdl-core');
-// const app = express();
-// var cors =require('cors')
 
-//app.use(cors())
 import express,{Request,Response} from 'express';
-import fs from 'fs';
 import ytdl from 'ytdl-core';
 import cors from 'cors';
 
-const port = 4000;
+const port = 7082;
 const app = express();
 
-app.use(cors);
+app.use(cors({
+  origin:'http://localhost:3000'  //this origin can access
+}));
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World! shubbi ');
-});
+
 
 const convertUrl = (url:any) =>{
 
   let newUrlArray;
-  if(url.includes("youtu.be")){
+  if(url.includes("youtu.be")){  //url short can be: www.youtu.be/
 
        newUrlArray = url.split("https://youtu.be/")
       return `https://youtube.com/watch?v=${newUrlArray[1]}`
@@ -45,21 +28,25 @@ const convertUrl = (url:any) =>{
       return `https://youtube.com/watch?v=${newUrlArray[1]}`
   }
   else if(url.includes("https://youtube.com/watch?v")){
-      return url
+      return url;
   }
   else{
-      return "https://youtube.com/watch?v=dQw4w9WgXcQ"
+    console.log("url:  "+url);
+    console.log('hello');
+      return "https://www.youtube.com/watch?v=_zSZXBdYOjc"
   }
 }
+
+
 
 //video
 
 app.get("/video",async(req:Request,res:Response)=>{
-  console.log('testing get video api'+ req.query.videoId);
-  // const videoId = convertUrl(req.query.videoId);
-  //  let info = await ytdl.getInfo(videoId)
-  //  res.json(info);
-  res.send('hello')
+  console.log('testing get video api'+ req.query.v);
+  const videoId = convertUrl(req.query.videoId);
+   let info = await ytdl.getInfo(videoId)
+   res.json(info);
+  // res.send('hello');
 })
 
 //audio
@@ -89,9 +76,9 @@ res.header('Content-Type', 'audio/mp3');
 ytdl(videoId, { filter: format => format.itag === parseInt(itag) }).pipe(res); 
 })
 
-
-
-app.listen(port,()=>{
-  console.log('server started')
+app.get('/', (req:Request, res:Response) => {
+  res.send('<h1>Hello World! shubbi </h1>');
 });
+
+app.listen(port);
 
