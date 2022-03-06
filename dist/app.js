@@ -17,9 +17,7 @@ const ytdl_core_1 = __importDefault(require("ytdl-core"));
 const cors_1 = __importDefault(require("cors"));
 const port = process.env.PORT || 3008;
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({
-    origin: '*' //this origin can access
-}));
+app.use((0, cors_1.default)());
 const convertUrl = (url) => {
     let newUrlArray;
     if (url.includes("youtu.be")) { //url short can be: www.youtu.be/
@@ -41,7 +39,7 @@ const convertUrl = (url) => {
 };
 //video
 app.get("/video", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('testing get video api' + req.query.v);
+    console.log('testing get video api' + req.query.videoId);
     const videoId = convertUrl(req.query.videoId);
     let info = yield ytdl_core_1.default.getInfo(videoId);
     res.json(info);
@@ -70,6 +68,7 @@ app.get("/download", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     (0, ytdl_core_1.default)(videoId, { filter: format => format.itag === parseInt(itag) }).pipe(res);
 }));
 app.get('/', (req, res) => {
+    console.log("server started");
     res.send('<h1>Hello World! shubbi </h1>');
 });
 app.listen(port);

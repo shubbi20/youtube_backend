@@ -7,9 +7,7 @@ import cors from 'cors';
 const port:string|number = process.env.PORT || 3008;
 const app = express();
 
-app.use(cors({
-  origin:'*'  //this origin can access
-}));
+app.use(cors());
 
 
 
@@ -42,7 +40,7 @@ const convertUrl = (url:any) =>{
 //video
 
 app.get("/video",async(req:Request,res:Response)=>{
-  console.log('testing get video api'+ req.query.v);
+  console.log('testing get video api'+ req.query.videoId);
   const videoId = convertUrl(req.query.videoId);
    let info = await ytdl.getInfo(videoId)
    res.json(info);
@@ -77,6 +75,7 @@ ytdl(videoId, { filter: format => format.itag === parseInt(itag) }).pipe(res);
 })
 
 app.get('/', (req:Request, res:Response) => {
+  console.log("server started");
   res.send('<h1>Hello World! shubbi </h1>');
 });
 
