@@ -4,7 +4,7 @@ import express,{Request,Response} from 'express';
 import ytdl from 'ytdl-core';
 import cors from 'cors';
 
-const port:string|number = process.env.PORT || 3008;
+const port:any = process.env.PORT || 3008;
 const app = express();
 
 app.use(cors());
